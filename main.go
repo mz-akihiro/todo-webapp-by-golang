@@ -22,8 +22,6 @@ func main() {
 	main.Handle("/deletetask-api", authmiddleware.CheckJwtMiddleware(taskdelete.DeleteTaskHandler))
 	main.Handle("/reloadtask-api", authmiddleware.CheckJwtMiddleware(taskreload.ReloadTaskHandler))
 
-	//main.HandleFunc("/check-api", checkauth.CheckHandlerJwt) // リダイレクト処理の実装
-
 	main.Handle("/", http.FileServer(http.Dir("public/"))) // 静的ファイル配信。実際にはアパッチなどwebサーバに任せるのが理想。
 
 	log.Println("Server started on port 8080")
