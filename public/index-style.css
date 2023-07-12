@@ -6,14 +6,15 @@
     box-sizing: border-box;
 }
 body{
-    height: 100vh;
+    /*height: 100vh;*/
     background: linear-gradient(
-        135deg,
+        100deg,
         #8052ec,
         #d161ff
     );
 }
 .container{
+    margin-top: 60px;   /*header要素と距離を置く*/
     width: 40%;
     min-width: 450px;
     position: absolute;
@@ -21,6 +22,7 @@ body{
     top: 50%;
     left: 50%;
     padding: 30px 40px;
+    overflow: visible;
 }
 #newtask{
     position: relative;
@@ -107,35 +109,36 @@ body{
 }
 
 .header {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 10px;
-background-color: white;
-border-radius: 10px;
-box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    z-index: 1; /*headerを最前面へ移動*/
 }
 .hachimaki {
-font-size: 24px;
-padding: 5px 10px;
+    font-size: 24px;
+    padding: 5px 10px;
 }
 .hamburger-menu {
-cursor: pointer;
+    cursor: pointer;
 }
 .hamburger-menu div {
-width: 25px;
-height: 3px;
-background-color: black;
-margin: 5px 0;
+    width: 25px;
+    height: 3px;
+    background-color: black;
+    margin: 5px 0;
 }
 .menu {
-display: none;
-position:absolute;
-top:50px;
-right:10px;
-background-color:white;
-border-radius:5px;
-box-shadow:2px 2px 5px rgba(0,0,0,0.3);
+    display: none;
+    position:absolute;
+    top:50px;
+    right:10px;
+    background-color:white;
+    border-radius:5px;
+    box-shadow:2px 2px 5px rgba(0,0,0,0.3);
 }
 .menu ul {
     list-style:none;
