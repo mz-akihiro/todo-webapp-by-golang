@@ -22,6 +22,15 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 
 	defer db.CloseDB(dbCnt)
 
+	if r.Method == "POST" {
+		fmt.Println("POST")
+	} else {
+		fmt.Println("signup - Method not allowed")
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprintln(w, "Method not Allowed")
+		return
+	}
+
 	//リクエスト用の構造体をmodelから引っ張ってきて用意
 	var user model.User
 	//用意した構造体にリクエストのjsonをデコード

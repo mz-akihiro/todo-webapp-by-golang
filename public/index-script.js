@@ -33,7 +33,7 @@ function addPost(){
                             deleteId: this.parentNode.querySelector("#taskId").textContent
                         };
                         $.ajax({
-                            type : 'post',
+                            type : 'delete',
                             url : "http://localhost:8080/deletetask-api",
                             data : JSON.stringify(deleteId),
                             contentType: 'application/JSON',

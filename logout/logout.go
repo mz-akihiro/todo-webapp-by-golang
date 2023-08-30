@@ -9,12 +9,13 @@ import (
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 
-	value, err := r.Cookie("token")
-	if err == nil {
-		fmt.Println("tokenあり")
-		fmt.Println(value)
+	if r.Method == "POST" {
+		fmt.Println("POST")
 	} else {
-		fmt.Println("tokenなし")
+		fmt.Println("logout - Method not allowed")
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprintln(w, "Method not Allowed")
+		return
 	}
 
 	cookie := &http.Cookie{}

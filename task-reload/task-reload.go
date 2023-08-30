@@ -16,6 +16,15 @@ func ReloadTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	defer db.CloseDB(dbCnt)
 
+	if r.Method == "POST" {
+		fmt.Println("POST")
+	} else {
+		fmt.Println("taskreload - Method not Allowed")
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprintln(w, "Method not Allowed")
+		return
+	}
+
 	// 認証用ミドルウェアがリクエストに内包した[user id]を受け取る
 	userId := r.Context().Value(model.ContextKey{UserId: "user_id"})
 

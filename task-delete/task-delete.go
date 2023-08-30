@@ -15,6 +15,15 @@ func DeleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	defer db.CloseDB(dbCnt)
 
+	if r.Method == "DELETE" {
+		fmt.Println("DELETE")
+	} else {
+		fmt.Println("taskdelete - Method not allowed")
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprintln(w, "Method not Allowed")
+		return
+	}
+
 	// task削除リクエスト用構造体を用
 	var deleteTask model.Delete
 

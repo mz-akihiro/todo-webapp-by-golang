@@ -18,6 +18,15 @@ func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	defer db.CloseDB(dbCnt)
 
+	if r.Method == "POST" {
+		fmt.Println("POST")
+	} else {
+		fmt.Println("taskadd - Method not allowed")
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprintln(w, "Method not Allowed")
+		return
+	}
+
 	//リクエスト用の構造体をmodelから引っ張ってきて用意
 	var task model.Task
 	// 認証ミドルウェアからリクエストに内包して送られてきたuseridを抜き出す
