@@ -23,10 +23,11 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(cookie.Value)
 
 	cookie.Name = "token"
-	cookie.Value = "" // valueを上書きする
-	cookie.Expires = time.Now()
+	cookie.Value = ""           // valueを上書きする
+	cookie.Expires = time.Now() // 現在時刻が期限なのですぐにクッキーから削除される
 	cookie.Path = "/"
 	cookie.Domain = os.Getenv("API_DOMAIN")
+	cookie.Secure = true
 	cookie.HttpOnly = true
 	cookie.SameSite = http.SameSiteNoneMode
 

@@ -32,18 +32,25 @@
                     scriptCharset: 'utf-8'
                 })
                 .then(
-                    function(data){
+                    function(data, textStatus, jqXHR){
                         //alert("成功")
-                        console.log("成功")
+                        console.log(jqXHR.status)
                         let err = document.getElementById("error");
                         err.innerHTML="";
                         window.location.href="http://localhost:8080/index.html"
                     },
-                    function(data){
-                        //alert("失敗")
-                        console.log("失敗")
-                        let err = document.getElementById("error");
-                        err.innerHTML="メールアドレスかパスワードが違います";
+                    function(jqXHR, textStatus, errorThrown){
+                        console.log(jqXHR.status)
+                        if (jqXHR.status >= 500) {
+                            let err = document.getElementById("error");
+                            err.innerHTML="サーバ側でエラーが発生しました";
+                        }else if (jqXHR.status === 401){
+                            let err = document.getElementById("error");
+                            err.innerHTML="メールアドレスかパスワードが違います";
+                        }else if (jqXHR.status >= 400) {
+                            let err = document.getElementById("error");
+                            err.innerHTML="リクエスト内容に不備があります";
+                        }
                     }
                 );
             })

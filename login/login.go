@@ -1,6 +1,7 @@
 package login
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -44,48 +45,31 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Email and password are required")
 		return
 	}
-	fmt.Println("1 pass")
 
-	//userテーブル内のemailカラムに同じ値がないか確認。あればcountが1以上になる。
-	//今回はログインなので、emailが登録されていることを確認。
-	var count int
-	if err := dbCnt.QueryRow("SELECT COUNT(*) FROM user WHERE email = ?", user.Email).Scan(&count); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, "Database error")
-		return
+	var (
+		password string
+		idToken  int
+	)
+	//tokenに自動採番のidカラムの値を埋め込んでおくために取り出す。
+	if err := dbCnt.QueryRow("SELECT password, id FROM user WHERE email = ?", user.Email).Scan(&password, &idToken); err != nil {
+		if err == sql.ErrNoRows {
+			w.WriteHeader(http.StatusUnauthorized)
+			fmt.Fprintln(w, "Invalid email or password")
+			return
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintln(w, "Database error")
+			return
+		}
 	}
-	if count == 0 {
-		w.WriteHeader(http.StatusConflict)
-		fmt.Fprintln(w, "Email not registered")
-		return
-	}
-	fmt.Println("2 pass", count)
-
-	//emailの値と同じ行のpasswordカラムから値を取得
-	var password string
-	row := dbCnt.QueryRow("SELECT password FROM user WHERE email = ?", user.Email)
-	if err := row.Scan(&password); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, "Database error")
-		return
-	}
+	fmt.Println("ログインしたユーザのID ", idToken)
 
 	//クライアントから送られたパスワードと登録済みのパスワードが一緒かどうか確認
 	if err := bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password)); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, "different password")
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprintln(w, "Invalid email or password")
 		return
 	}
-
-	//tokenにidを埋め込んでおくために取り出す。
-	var idToken int
-	row2 := dbCnt.QueryRow("SELECT id FROM user WHERE email = ?", user.Email)
-	if err := row2.Scan(&idToken); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, "Database error")
-		return
-	}
-	fmt.Println("ログインしたユーザのID ", idToken)
 
 	//トークン作成
 	// パスワードが一致する場合はJWTトークンを発行
@@ -112,5 +96,5 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	cookie.SameSite = http.SameSiteNoneMode
 
 	http.SetCookie(w, cookie)
-	fmt.Fprintln(w, "Cookie sent")
+	fmt.Fprintln(w, "Success login")
 }

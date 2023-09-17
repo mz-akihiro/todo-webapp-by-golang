@@ -64,7 +64,5 @@ func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 		if err := json.NewEncoder(w).Encode(jsonData); err != nil {
 			log.Println(err)
 		}
-
 	}
-
 }
